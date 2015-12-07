@@ -12,6 +12,8 @@ module.exports = (options = {}) ->
   args = ['-jar']
   args.push options.jarPath ? "plantuml.jar"
   args.push '-p'
+  if options.format == 'svg'
+    args.push '-tsvg';
 
   through.obj (file, encoding, callback) ->
     if file.isNull()
@@ -22,8 +24,8 @@ module.exports = (options = {}) ->
 
     # relace the extension
     original_file_path = file.path
-    ext = if options.erb then '.erb' else '.html'
-    file.path = gutil.replaceExtension file.path, '.png'
+    ext = if options.format == 'svg' then '.svg' else '.png'
+    file.path = gutil.replaceExtension file.path, ext
 
     program = spawn cmnd, args
 
